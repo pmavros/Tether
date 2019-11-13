@@ -31,3 +31,7 @@ The GH script relies on the following external plugins:
 1. Human UI
 1. Human
 1. Heteroptera
+
+## Credits
+
+Tether was conceived and put together by Panos Mavros. Thanks goes to the authors of the various libraries used for providing examples that I used to implement the final system.
