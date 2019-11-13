@@ -34,4 +34,4 @@ The GH script relies on the following external plugins:
 
 ## Acknowledgements
 
-Thanks goes to the authors of the various libraries used for providing examples that I used to implement the final system, and to my colleagues at the [Future Cities Laboratory]{www.fcl.ethz.ch) for encouraging me to wrap this up!
+Thanks goes to the authors of the various libraries used for providing examples that I used to implement the final system, and to my colleagues at the [Future Cities Laboratory](www.fcl.ethz.ch) for encouraging me to wrap this up!
