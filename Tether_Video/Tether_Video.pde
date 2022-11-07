@@ -68,8 +68,8 @@ void setup() {
   b.changeItem("a","text","Load File");
   b.changeItem("b","text","Play");
   b.changeItem("c","text","Pause");
-  b.changeItem("d","text","Forward");
-  b.changeItem("e","text","Backward");
+  b.changeItem("d","text","Backward");
+  b.changeItem("e","text","Forward");
 
   //b.onMove(new CallbackListener(){
   //  public void controlEvent(CallbackEvent ev) {
@@ -98,11 +98,11 @@ void bar(int n) {
     case 2: // pause
       if(myMovie.isPlaying()) myMovie.pause();
       break;
-    case 3: // forward
-      myMovie.setTime(myMovie.time() + 10*units);
-      break;
-    case 4: // backward
+    case 3: // backward
       myMovie.setTime(myMovie.time() - 10*units);
+      break;
+    case 4: // forward 
+      myMovie.setTime(myMovie.time() + 10*units);
       break;
   }
 }
@@ -126,9 +126,10 @@ void draw() {
     //float y = myMovie.time();
      
     textAlign(LEFT,CENTER);
-    
-    text("Time (secs):  " + round(myMovie.time()/1000) + " / " + (round(myMovie.duration())/1000) + 
-    "  |  Timestamp (ms):  " + round(myMovie.time()*1) + " / " + (round(myMovie.duration() * 1)), 10, 30);
+    // " | Listening @ " + myListeningPort+
+    // " | Streaming @ " + myBroadcastPort
+    text("Timestamp (seconds):  " + round(myMovie.time()/1000) + " / " + (round(myMovie.duration())/1000) + 
+    "  | (milliseconds):  " + round(myMovie.time()*1) + " / " + (round(myMovie.duration() * 1)), 10, 30);
     //text("Timestamp (ms):  " + round(myMovie.time()*1000) + " / " + (round(myMovie.duration() * 1000)), 10, 50);
         
     //noStroke();
