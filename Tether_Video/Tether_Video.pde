@@ -1,7 +1,10 @@
  /**
- * Streaming Frame info to Grasshopper
- * by Panos Mavro, Future Cities Laboratory. 
+ * Tether
+ * Tether connects a small video player with the computer aided software Rhinoceros.
+ * Tether streams timestamp/frame information to Rhino/Grasshopper
+ * Author: Panos Mavros, Future Cities Laboratory. 
  * 
+ * Details:
  * Moves through the video one frame at the time by using the
  * arrow keys. It estimates the frame counts using the framerate
  * of the movie file, so it might not be exact in some cases.
@@ -17,18 +20,21 @@
 //import processing.video.*;
 import netP5.*;
 import oscP5.*;
-
+import controlP5.*;
 import VLCJVideo.*;
 
 import uk.co.caprica.vlcj.player.events.MediaPlayerEventType;
 
 
+ControlP5 cp5;
 OscP5 oscP5;
 VLCJVideo myMovie = null;
 
 //Movie myMovie = null;
 File selection;
 int myMovieLength = 0;
+
+int toolbar_y_offset = 40;
  
 int x = 0;
 int i = 0;
@@ -41,6 +47,27 @@ NetAddress myRemoteLocation;
 void setup() {
   // size should always be the 1st line in draw(): init
   size(640, 480); 
+  surface.setAlwaysOnTop(true);
+
+  cp5 = new ControlP5(this);
+  ButtonBar b = cp5.addButtonBar("bar")
+     .setPosition(0, 0)
+     .setSize(width, 20)
+     .addItems(split("a b c d e"," "))
+     ;
+     println(b.getItem("a"));
+  b.changeItem("a","text","Load File");
+  b.changeItem("b","text","Play");
+  b.changeItem("c","text","Pause");
+  b.changeItem("d","text","Forward");
+  b.changeItem("e","text","Backward");
+
+  //b.onMove(new CallbackListener(){
+  //  public void controlEvent(CallbackEvent ev) {
+  //    ButtonBar bar = (ButtonBar)ev.getController();
+  //    println("hello ", bar.hover());
+  //  }
+  //});
   
   oscP5 = new OscP5(this, myListeningPort);
   myRemoteLocation = new NetAddress("127.0.0.1", myBroadcastPort);
@@ -48,58 +75,73 @@ void setup() {
    myMovie = new VLCJVideo(this);
    bindVideoEvents();
   
-  
-  // set default path for fileSelected
-  selection = new File(dataPath("") + "//*");
-  // start callback function 
-  selectInput("Select a file to process:", "fileSelected", selection);
 }
 
+
+void bar(int n) {
+  println("bar clicked, item-value:", n);
+  switch(n) {
+    case 0: // load file
+      selectInput("Select a file to process:", "fileSelected", selection);
+      break;
+    case 1: // play
+       if(!myMovie.isPlaying()) myMovie.play();
+      break;
+    case 2: // pause
+      if(myMovie.isPlaying()) myMovie.pause();
+      break;
+    case 3: // forward
+      myMovie.jump(myMovie.time() + 10);
+      break;
+    case 4: // backward
+      myMovie.jump(myMovie.time() - 10);
+      break;
+  }
+}
  
 void draw() {
   
   background(0);
+    surface.setAlwaysOnTop(true);
+
+  
   // check whether the movie is already loaded
   if (myMovie != null && myMovie.width > 0) {
     
-  //    float n = map(mouseX, 0.0, width, 0.0, 100.0);
-  //  setFrame(n);
   
     // load success 
-    image(myMovie, 0, 0, width, height);
+    image(myMovie, 0, toolbar_y_offset, width, height);
      myMovie.loop();
  
     float y = myMovie.time();
- 
-    //println("time = " + myMovie.time());
-    //println("duration = " + myMovie.duration());
+     
+    textAlign(LEFT,CENTER);
     
-    textAlign(LEFT);
+    text("Time (secs):  " + round(myMovie.time()) + " / " + (round(myMovie.duration())) + 
+    "  |  Timestamp (ms):  " + round(myMovie.time()*1000) + " / " + (round(myMovie.duration() * 1000)), 10, 30);
+    //text("Timestamp (ms):  " + round(myMovie.time()*1000) + " / " + (round(myMovie.duration() * 1000)), 10, 50);
+        
+    //noStroke();
+    //fill(0);
+    //rect(8, height - 20,  width -180, 15);
     
-    text("Time (secs):  " + round(myMovie.time()) + " / " + (round(myMovie.duration())), 10, 10);
-    text("Timestamp (ms):  " + round(myMovie.time()*1000) + " / " + (round(myMovie.duration() * 1000)), 10, 30);
-    noStroke();
-    fill(0);
-    rect(8, height - 20,  width -180, 15);
-        fill(255);
-
+    fill(255);
     text("Press: SPACE to play/pause | LEFT / RIGHT to go +/- 10 seconds | ENTER to stop and restart", 10, height - 10);
     
-     //OscMessage myMessage = new OscMessage("/timestamp");
-     //myMessage.add(myMovie.time()*1000); // convert timestamp to milliseconds
+     OscMessage myMessage = new OscMessage("/timestamp");
+     myMessage.add(myMovie.time()*1000); // convert timestamp to milliseconds
      //myMessage.add(map(myMovie.time(), 0, myMovie.duration(), 0, 100)); // convert timestamp to percent of movie time, i.e.  1 - 100
    
      // /* send the message */
-     // oscP5.send(myMessage, myRemoteLocation ); 
+      oscP5.send(myMessage, myRemoteLocation ); 
 
-    if (y > myMovie.duration() - 0.1) {
-      //exit(); // QUIT
-    } 
-    //
+    //if (y > myMovie.duration() - 0.1) {
+    //  //exit(); // QUIT
+    //} 
   } else {
     // wait for callBack Function fileSelected
     textAlign(CENTER);
-    text("Wait, I am loading the movie file", width/2, height/2);
+    text("Hey!\n Please load a file...", width/2, height/2);
   } // else
 } // func
  
@@ -109,7 +151,7 @@ void fileSelected(File selection)
 {
   if (selection == null) {
     println("Window was closed or the user hit cancel.");
-    exit();  // QUIT
+    //exit();  // QUIT
   } else {
     
     myMovie.openMedia(selection.getAbsolutePath());
