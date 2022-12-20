@@ -133,8 +133,8 @@ void draw() {
     text("Press: SPACE to play/pause | LEFT / RIGHT to go +/- 10 seconds | ENTER to stop and restart", 10, height - 10);
     
      OscMessage myMessage = new OscMessage("/timestamp");
-     myMessage.add(myMovie.time()*1000); // convert timestamp to milliseconds
-     //myMessage.add(map(myMovie.time(), 0, myMovie.duration(), 0, 100)); // convert timestamp to percent of movie time, i.e.  1 - 100
+     myMessage.add(myMovie.time()); // convert timestamp to milliseconds
+     myMessage.add(map(myMovie.time(), 0, myMovie.duration(), 0, 100)); // convert timestamp to percent of movie time, i.e.  1 - 100
    
      // /* send the message */
       oscP5.send(myMessage, myRemoteLocation ); 
