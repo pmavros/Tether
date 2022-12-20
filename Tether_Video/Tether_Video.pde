@@ -38,15 +38,19 @@ int toolbar_y_offset = 40;
  
 int x = 0;
 int i = 0;
+int w = 640;
+int h = 480;
 
 int myListeningPort = 32000;
 int myBroadcastPort = 12000;
 
 NetAddress myRemoteLocation;
+void settings() {
+  size(w, h); 
+}
 
 void setup() {
   // size should always be the 1st line in draw(): init
-  size(640, 480); 
   surface.setAlwaysOnTop(true);
 
   cp5 = new ControlP5(this);
@@ -160,16 +164,11 @@ void fileSelected(File selection)
     myMovie.pause();
   }
 }
- 
- //Called every time a new frame is available to read
-//void movieEvent(Movie m) {
-//  m.read();
-//}
 
 
   
-  void oscEvent(OscMessage theOscMessage) {
-  //println(theOscMessage);
+void oscEvent(OscMessage theOscMessage) {
+  println(theOscMessage);
   /* check if the address pattern fits any of our patterns */
   if (theOscMessage.addrPattern().equals("/control/time")) {
     
@@ -188,9 +187,6 @@ void fileSelected(File selection)
      myMovie.jump(jumpToFrame);
     }
     
-    
-    
-  
     
 } else if (theOscMessage.addrPattern().equals("/control/play")) {
           println(theOscMessage);
