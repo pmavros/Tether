@@ -17,22 +17,26 @@
  */
  
  
-//import processing.video.*;
+import processing.video.*;
+import processing.sound.*;
+
 import netP5.*;
 import oscP5.*;
 import controlP5.*;
-import VLCJVideo.*;
+//import VLCJVideo.*;
 
-import uk.co.caprica.vlcj.player.events.MediaPlayerEventType;
+//import uk.co.caprica.vlcj.player.*;
 
 
 ControlP5 cp5;
 OscP5 oscP5;
-VLCJVideo myMovie = null;
+//VLCJVideo myMovie = null;
 
-//Movie myMovie = null;
+Movie myMovie = null;
 File selection;
 int myMovieLength = 0;
+
+boolean isPlaying = false;
 
 int toolbar_y_offset = 40;
  
@@ -50,7 +54,6 @@ void settings() {
 }
 
 void setup() {
-  // size should always be the 1st line in draw(): init
   surface.setAlwaysOnTop(true);
 
   cp5 = new ControlP5(this);
@@ -65,19 +68,13 @@ void setup() {
   b.changeItem("c","text","Pause");
   b.changeItem("d","text","Forward");
   b.changeItem("e","text","Backward");
-
-  //b.onMove(new CallbackListener(){
-  //  public void controlEvent(CallbackEvent ev) {
-  //    ButtonBar bar = (ButtonBar)ev.getController();
-  //    println("hello ", bar.hover());
-  //  }
-  //});
   
   oscP5 = new OscP5(this, myListeningPort);
   myRemoteLocation = new NetAddress("127.0.0.1", myBroadcastPort);
   
-   myMovie = new VLCJVideo(this);
-   bindVideoEvents();
+  myMovie = null;
+   //myMovie = new VLCJVideo(this);
+   //bindVideoEvents();
   
 }
 
@@ -121,8 +118,9 @@ void draw() {
      
     textAlign(LEFT,CENTER);
     
-    text("Time (secs):  " + round(myMovie.time()) + " / " + (round(myMovie.duration())) + 
-    "  |  Timestamp (ms):  " + round(myMovie.time()*1000) + " / " + (round(myMovie.duration() * 1000)), 10, 30);
+    text("Time (secs):  " + nf(myMovie.time(),0, 2 ) + " / " + nf(myMovie.duration(), 0,2) , 10, 30);
+    //+ 
+    //"  |  Timestamp (ms):  " + round(myMovie.time()*1000) + " / " + (round(myMovie.duration() * 1000))
     //text("Timestamp (ms):  " + round(myMovie.time()*1000) + " / " + (round(myMovie.duration() * 1000)), 10, 50);
         
     //noStroke();
@@ -157,14 +155,21 @@ void fileSelected(File selection)
     println("Window was closed or the user hit cancel.");
     //exit();  // QUIT
   } else {
-    
-    myMovie.openMedia(selection.getAbsolutePath());
+      myMovie = new Movie(this, selection.getAbsolutePath());
+    //myMovie.openMedia(selection.getAbsolutePath());
     myMovie.play();
+    isPlaying = true;
     myMovie.jump(10);
     myMovie.pause();
   }
 }
 
+
+
+// Called every time a new frame is available to read
+void movieEvent(Movie m) {
+  m.read();
+}
 
   
 void oscEvent(OscMessage theOscMessage) {
@@ -197,20 +202,30 @@ void oscEvent(OscMessage theOscMessage) {
 }
 
 void keyPressed() {
+  println(key == ' ');
   if(key == ' ') {
-    if(myMovie.isPlaying()) myMovie.pause();
-    else myMovie.play();
+        print(myMovie.isPlaying());
+
+    if(isPlaying) {
+      myMovie.pause(); 
+      isPlaying = false;
+    } else {
+      myMovie.play();
+      isPlaying = true;
+    }
   }
   if(keyCode == ENTER) {
-    if(myMovie.isPlaying()) myMovie.stop();
-    else myMovie.play();
+    print("to start");
+    myMovie.jump(0);
+    //if(myMovie.isPlaying()) myMovie.stop();
+    //else myMovie.play();
   }
-  if(keyCode == UP) {
-    myMovie.setVolume(myMovie.volume() + 0.1);
-  }
-  if(keyCode == DOWN) {
-    myMovie.setVolume(myMovie.volume() - 0.1);
-  }
+  //if(keyCode == UP) {
+  //  myMovie.setVolume(myMovie.volume() + 0.1);
+  //}
+  //if(keyCode == DOWN) {
+  //  myMovie.setVolume(myMovie.volume() - 0.1);
+  //}
   if(keyCode == LEFT) {
     myMovie.jump(myMovie.time() - 10);
   }
@@ -219,28 +234,28 @@ void keyPressed() {
   }
 }
 
-void bindVideoEvents() {
-  myMovie.bind( MediaPlayerEventType.FINISHED, new Runnable() { public void run() {
-    println( "finished" );
-  } } );
-  myMovie.bind( MediaPlayerEventType.OPENING, new Runnable() { public void run() {
-    println( "opened" );
-  } } );
-  myMovie.bind( MediaPlayerEventType.ERROR, new Runnable() { public void run() {
-    println( "error" );
-  } } );
-  myMovie.bind( MediaPlayerEventType.PAUSED, new Runnable() { public void run() {
-    println( "paused" );
-  } } );
-  myMovie.bind( MediaPlayerEventType.STOPPED, new Runnable() { public void run() {
-    println( "stopped" );
-  } } );
-  myMovie.bind( MediaPlayerEventType.PLAYING, new Runnable() { public void run() {
-    println( "playing" );
-  } } );
-  myMovie.bind( MediaPlayerEventType.MEDIA_STATE_CHANGED, new Runnable() { public void run() {
-    println( "state changed" );
-  } } );
-}
+//void bindVideoEvents() {
+//  myMovie.bind( MediaPlayerEventType.FINISHED, new Runnable() { public void run() {
+//    println( "finished" );
+//  } } );
+//  myMovie.bind( MediaPlayerEventType.OPENING, new Runnable() { public void run() {
+//    println( "opened" );
+//  } } );
+//  myMovie.bind( MediaPlayerEventType.ERROR, new Runnable() { public void run() {
+//    println( "error" );
+//  } } );
+//  myMovie.bind( MediaPlayerEventType.PAUSED, new Runnable() { public void run() {
+//    println( "paused" );
+//  } } );
+//  myMovie.bind( MediaPlayerEventType.STOPPED, new Runnable() { public void run() {
+//    println( "stopped" );
+//  } } );
+//  myMovie.bind( MediaPlayerEventType.PLAYING, new Runnable() { public void run() {
+//    println( "playing" );
+//  } } );
+//  myMovie.bind( MediaPlayerEventType.MEDIA_STATE_CHANGED, new Runnable() { public void run() {
+//    println( "state changed" );
+//  } } );
+//}
   
 // END
