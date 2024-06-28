@@ -1,45 +1,45 @@
- /**
+/**
  * Tether
  * Tether connects a small video player with the computer aided software Rhinoceros.
  * Tether streams timestamp/frame information to Rhino/Grasshopper
- * Author: Panos Mavros, Future Cities Laboratory. 
- * 
+ * Author: Panos Mavros, Future Cities Laboratory.
+ *
  * Details:
  * Moves through the video one frame at the time by using the
  * arrow keys. It estimates the frame counts using the framerate
  * of the movie file, so it might not be exact in some cases.
- * 
+ *
  * It broadcasts the timestamp of the current frame as OSC message;
  * It receives input from a remote program to advance the play / pause / advance frame.
  *
  
  * Using code from Processing example "frames" and https://forum.processing.org/two/discussion/12111/how-do-i-select-a-movie-using-selectinput
  */
- 
- 
-import processing.video.*;
-import processing.sound.*;
+
+
+//import processing.video. *;
+//import processing.sound.*;
 
 import netP5.*;
 import oscP5.*;
 import controlP5.*;
-//import VLCJVideo.*;
+import VLCJVideo.*;
 
-//import uk.co.caprica.vlcj.player.*;
-
-
+VLCJVideo video;
 ControlP5 cp5;
 OscP5 oscP5;
-//VLCJVideo myMovie = null;
 
-Movie myMovie = null;
+//Movie myMovie;
 File selection;
-int myMovieLength = 0;
+//int videoLength = 0;
+float currentTimeInSeconds;
+float videoDurationInSeconds;
+float currentTimePercent;
 
 boolean isPlaying = false;
 
 int toolbar_y_offset = 40;
- 
+
 int x = 0;
 int i = 0;
 int w = 640;
@@ -48,214 +48,165 @@ int h = 480;
 int myListeningPort = 32000;
 int myBroadcastPort = 12000;
 
+boolean AlwaysOnTop = true;
+int skipDuration = 5 * 1000; // milliseconds if using VLCJVideo. Used to for forward / backward.
+
 NetAddress myRemoteLocation;
 void settings() {
-  size(w, h); 
+  size(w, h);
 }
 
 void setup() {
   surface.setAlwaysOnTop(true);
+  //textSize(20);
 
   cp5 = new ControlP5(this);
   ButtonBar b = cp5.addButtonBar("bar")
-     .setPosition(0, 0)
-     .setSize(width, 20)
-     .addItems(split("a b c d e"," "))
-     ;
-     println(b.getItem("a"));
-  b.changeItem("a","text","Load File");
-  b.changeItem("b","text","Play");
-  b.changeItem("c","text","Pause");
-  b.changeItem("d","text","Forward");
-  b.changeItem("e","text","Backward");
-  
+    .setPosition(0, 0)
+    .setSize(width, 20)
+    .addItems(split("a b c d e", " "));
+  b.changeItem("a", "text", "Load File");
+  b.changeItem("b", "text", "Play");
+  b.changeItem("c", "text", "Pause");
+  b.changeItem("d", "text", "Forward");
+  b.changeItem("e", "text", "Backward");
+
   oscP5 = new OscP5(this, myListeningPort);
   myRemoteLocation = new NetAddress("127.0.0.1", myBroadcastPort);
-  
-  myMovie = null;
-   //myMovie = new VLCJVideo(this);
-   //bindVideoEvents();
-  
 }
 
-
-void bar(int n) {
-  println("bar clicked, item-value:", n);
-  switch(n) {
-    case 0: // load file
-      selectInput("Select a file to process:", "fileSelected", selection);
-      break;
-    case 1: // play
-       if(!myMovie.isPlaying()) myMovie.play();
-      break;
-    case 2: // pause
-      if(myMovie.isPlaying()) myMovie.pause();
-      break;
-    case 3: // forward
-      myMovie.jump(myMovie.time() + 10);
-      break;
-    case 4: // backward
-      myMovie.jump(myMovie.time() - 10);
-      break;
-  }
-}
- 
 void draw() {
-  
-  background(0);
-    surface.setAlwaysOnTop(true);
 
-  
+  background(0);
+  surface.setAlwaysOnTop(AlwaysOnTop);
+
+
   // check whether the movie is already loaded
-  if (myMovie != null && myMovie.width > 0) {
-    
-  
-    // load success 
-    image(myMovie, 0, toolbar_y_offset, width, height);
-     myMovie.loop();
- 
-    float y = myMovie.time();
-     
-    textAlign(LEFT,CENTER);
-    
-    text("Time (secs):  " + nf(myMovie.time(),0, 2 ) + " / " + nf(myMovie.duration(), 0,2) , 10, 30);
-    //+ 
-    //"  |  Timestamp (ms):  " + round(myMovie.time()*1000) + " / " + (round(myMovie.duration() * 1000))
-    //text("Timestamp (ms):  " + round(myMovie.time()*1000) + " / " + (round(myMovie.duration() * 1000)), 10, 50);
-        
+  if (video != null && video.width > 0) {
+
+
+    // load success
+    image(video, 0, toolbar_y_offset, width, height);
+
+
+    // get current time, duration
+    // NOTE that VLCJVideo returns time in milliseconds so we need to convert to seconds.
+    currentTimeInSeconds = (float) video.time() / 1000;
+    videoDurationInSeconds = (float) video.duration() / 1000;
+    currentTimePercent = map(currentTimeInSeconds, 0, videoDurationInSeconds, 0, 100);
+
+    textAlign(LEFT, CENTER);
+    text("Time (secs):  " + nf(currentTimeInSeconds, 0, 2 ) + " / " + nf(videoDurationInSeconds, 0, 2), 10, 30);
+
     //noStroke();
     //fill(0);
     //rect(8, height - 20,  width -180, 15);
-    
+
     fill(255);
     text("Press: SPACE to play/pause | LEFT / RIGHT to go +/- 10 seconds | ENTER to stop and restart", 10, height - 10);
-    
-     OscMessage myMessage = new OscMessage("/timestamp");
-     myMessage.add(myMovie.time()); // convert timestamp to milliseconds
-     myMessage.add(map(myMovie.time(), 0, myMovie.duration(), 0, 100)); // convert timestamp to percent of movie time, i.e.  1 - 100
-   
-     // /* send the message */
-      oscP5.send(myMessage, myRemoteLocation ); 
 
-    //if (y > myMovie.duration() - 0.1) {
-    //  //exit(); // QUIT
-    //} 
+    OscMessage myMessage = new OscMessage("/timestamp");
+    myMessage.add(currentTimeInSeconds); // convert timestamp to milliseconds
+    myMessage.add(currentTimePercent); // convert timestamp to percent of movie time, i.e.  1 - 100
+
+    // /* send the message */
+    oscP5.send(myMessage, myRemoteLocation );
   } else {
     // wait for callBack Function fileSelected
     textAlign(CENTER);
     text("Hey!\n Please load a file...", width/2, height/2);
   } // else
 } // func
- 
+
 // --------------------------------------------------
- 
-void fileSelected(File selection) 
+
+void fileSelected(File selection)
 {
   if (selection == null) {
     println("Window was closed or the user hit cancel.");
     //exit();  // QUIT
   } else {
-      myMovie = new Movie(this, selection.getAbsolutePath());
-    //myMovie.openMedia(selection.getAbsolutePath());
-    myMovie.play();
-    isPlaying = true;
-    myMovie.jump(10);
-    myMovie.pause();
+    video = new VLCJVideo(this);
+
+    video.open( selection.getAbsolutePath());
+    video.setRepeat(true);
+    video.play();
+    video.setVolume(100); //setVolume only works AFTER play()
+
+    //myMovie.play();
+    //myMovie.jump(1);
+    //myMovie.pause();
   }
 }
 
-
-
-// Called every time a new frame is available to read
-void movieEvent(Movie m) {
-  m.read();
-}
-
-  
+// This handles osc messages sent from Rhino/Grasshopper, to control playback.
 void oscEvent(OscMessage theOscMessage) {
   println(theOscMessage);
   /* check if the address pattern fits any of our patterns */
-  if (theOscMessage.addrPattern().equals("/control/time")) {
-    
-    println(theOscMessage);
-    
-    //int moveTime =  Integer.valueOf(theOscMessage.get(0).stringValue());
-    myMovie.jump(myMovie.time()  + 1 * Integer.valueOf(theOscMessage.get(0).stringValue()));
-    
-  }
-  else if (theOscMessage.addrPattern().equals("/control/slider")) {
-    
+  String oscPattern = String.valueOf(theOscMessage.addrPattern());
+  
+  switch(oscPattern) {
+  case "/control/time":
+    video.setTime(video.time()  + 1 * Integer.valueOf(theOscMessage.get(0).stringValue()));
+    break;
+  case "/control/slider":
     int jumpTo =  Integer.valueOf(theOscMessage.get(0).stringValue());
-    float jumpToFrame = map(jumpTo, 0.0, 100.0, 0, myMovie.duration());
-    
-    if( jumpToFrame < myMovie.duration() - 0.1) {
-     myMovie.jump(jumpToFrame);
+    int jumpToFrame = (int) map(jumpTo, 0.0, 100.0, 0, video.duration() /1000 );
+
+    if ( jumpToFrame < video.duration() - 0.1) {
+      video.setTime(jumpToFrame);
     }
-    
-    
-} else if (theOscMessage.addrPattern().equals("/control/play")) {
-          println(theOscMessage);
-         if(myMovie.isPlaying()) myMovie.pause();
-          else myMovie.play();
-    }
- 
+    break;
+  case "/control/play":
+    if (video.isPlaying()) video.pause();
+    else video.play();
+    break;
+  } // end switch
 }
 
 void keyPressed() {
-  println(key == ' ');
-  if(key == ' ') {
-        print(myMovie.isPlaying());
-
-    if(isPlaying) {
-      myMovie.pause(); 
-      isPlaying = false;
-    } else {
-      myMovie.play();
-      isPlaying = true;
-    }
+  if (key == ' ') {
+    video.pause();
   }
-  if(keyCode == ENTER) {
-    print("to start");
-    myMovie.jump(0);
-    //if(myMovie.isPlaying()) myMovie.stop();
-    //else myMovie.play();
+  if (keyCode == ENTER) {
+    if (video.isPlaying()) video.stop();
+    else video.play();
   }
-  //if(keyCode == UP) {
-  //  myMovie.setVolume(myMovie.volume() + 0.1);
-  //}
-  //if(keyCode == DOWN) {
-  //  myMovie.setVolume(myMovie.volume() - 0.1);
-  //}
-  if(keyCode == LEFT) {
-    myMovie.jump(myMovie.time() - 10);
+  if (keyCode == UP) {
+    video.setVolume(video.volume() + 10);
   }
-  if(keyCode == RIGHT) {
-    myMovie.jump(myMovie.time() + 10);
+  if (keyCode == DOWN) {
+    video.setVolume(video.volume() - 10);
+  }
+  if (keyCode == LEFT) {
+    video.setTime(video.time() - skipDuration);
+  }
+  if (keyCode == RIGHT) {
+    video.setTime(video.time() + skipDuration);
+  }
+  if (key == 'm') {
+    video.setMute(!video.isMute());
   }
 }
 
-//void bindVideoEvents() {
-//  myMovie.bind( MediaPlayerEventType.FINISHED, new Runnable() { public void run() {
-//    println( "finished" );
-//  } } );
-//  myMovie.bind( MediaPlayerEventType.OPENING, new Runnable() { public void run() {
-//    println( "opened" );
-//  } } );
-//  myMovie.bind( MediaPlayerEventType.ERROR, new Runnable() { public void run() {
-//    println( "error" );
-//  } } );
-//  myMovie.bind( MediaPlayerEventType.PAUSED, new Runnable() { public void run() {
-//    println( "paused" );
-//  } } );
-//  myMovie.bind( MediaPlayerEventType.STOPPED, new Runnable() { public void run() {
-//    println( "stopped" );
-//  } } );
-//  myMovie.bind( MediaPlayerEventType.PLAYING, new Runnable() { public void run() {
-//    println( "playing" );
-//  } } );
-//  myMovie.bind( MediaPlayerEventType.MEDIA_STATE_CHANGED, new Runnable() { public void run() {
-//    println( "state changed" );
-//  } } );
-//}
-  
+void bar(int n) {
+  println("bar clicked, item-value:", n);
+  switch(n) {
+  case 0: // load file
+    selectInput("Select a file to process:", "fileSelected", selection);
+    break;
+  case 1: // play
+    if (!video.isPlaying()) video.play();
+    break;
+  case 2: // pause
+    video.pause();
+    break;
+  case 3: // forward
+    video.setTime(video.time() + skipDuration );
+    break;
+  case 4: // backward
+    video.setTime(video.time() - skipDuration );
+    break;
+  }
+}
 // END
