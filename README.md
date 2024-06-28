@@ -27,10 +27,12 @@ A Grasshopper (GH) Script does four things:
 
 The GH script relies on the following external plugins:
 
-1. gHowl
-1. Human UI
-1. Human
-1. Heteroptera
+1. gHowln - [https://www.food4rhino.com/en/app/ghowl](https://www.food4rhino.com/en/app/ghowl)
+1. Human UI - [https://www.food4rhino.com/en/app/human-ui](https://www.food4rhino.com/en/app/human-ui)
+1. Heteroptera - [https://www.food4rhino.com/en/app/heteroptera](https://www.food4rhino.com/en/app/heteroptera)
+1. Pufferfish - [https://www.food4rhino.com/en/app/pufferfish](https://www.food4rhino.com/en/app/pufferfish)
+1. geospatial for saving a csv (can be changed)
+
 
 ## Acknowledgements
 
