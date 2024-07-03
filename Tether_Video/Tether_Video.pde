@@ -37,6 +37,8 @@ float videoDurationInSeconds;
 float currentTimePercent;
 
 boolean isPlaying = false;
+boolean AlwaysOnTop = false;
+boolean toggle = false;
 
 int toolbar_y_offset = 40;
 
@@ -44,32 +46,43 @@ int x = 0;
 int i = 0;
 int w = 640;
 int h = 480;
-
+ButtonBar b;
+//Button c;
 int myListeningPort = 32000;
 int myBroadcastPort = 12000;
 
-boolean AlwaysOnTop = true;
 int skipDuration = 5 * 1000; // milliseconds if using VLCJVideo. Used to for forward / backward.
 
 NetAddress myRemoteLocation;
 void settings() {
   size(w, h);
 }
-
+ CheckBox checkbox;
 void setup() {
-  surface.setAlwaysOnTop(true);
+  //surface.setAlwaysOnTop(true);
   //textSize(20);
 
   cp5 = new ControlP5(this);
-  ButtonBar b = cp5.addButtonBar("bar")
+   b = cp5.addButtonBar("bar")
     .setPosition(0, 0)
-    .setSize(width, 20)
+    .setSize(width *6/6, 20)
     .addItems(split("a b c d e", " "));
   b.changeItem("a", "text", "Load File");
   b.changeItem("b", "text", "Play");
   b.changeItem("c", "text", "Pause");
   b.changeItem("d", "text", "Forward");
   b.changeItem("e", "text", "Backward");
+  
+  cp5.addToggle("Always_Top")
+    .setPosition(width-55, 25)
+    .setSize(50, 20)
+    .setValue(false) ;
+    
+  // checkbox = cp5.addCheckBox("Always_Top")
+  //.setPosition(width *5/6, 0)
+  //.setSize(width * 1/12, 20)
+  //.setItemsPerRow(1)
+  //.addItem("TOP", 0);
 
   oscP5 = new OscP5(this, myListeningPort);
   myRemoteLocation = new NetAddress("127.0.0.1", myBroadcastPort);
@@ -209,4 +222,14 @@ void bar(int n) {
     break;
   }
 }
+void Always_Top(boolean theFlag) {
+  println(theFlag);
+     if (theFlag==true) {
+      AlwaysOnTop = true;    
+    } else {
+      AlwaysOnTop = false;
+    }
+}
+
+
 // END
