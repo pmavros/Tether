@@ -3,6 +3,14 @@
 ## Description
 TETHER enables the connection of a video playback in Processing and a CAD drawing in Rhinoceros. Behind the scenes, the Processing script relies on the OSC protocol to broadcast the playback position (i.e. the timestamp of the current frame, expressed as milliseconds from start, and as a percentage of the total movie duration). On the Rhinoceros side, a Grasshopper script, receive the timestamp information and allows the user to control the movie playback. When the user adds a new point on the current drawing on Rhino, the timestamp gets appended to the point as the object name as well as a separate attribute.  
 
+## Getting started!
+### Why would I want to use Tether?
+### How to install?
+1. If you don't have it installed already, download and install [Rhinoceros 3D](https://www.rhino3d.com/) (license or use up to 90 days on trial version).
+2. Download the latest release or get the whole repository as a zip file. Unpack zip.
+3. Start Rhino, start Grasshopper (enter command grasshopper). From Grasshopper > Open File > [... folder where you saved the Tether]/tether.gh
+4. Open the Tether Video.
+
 ## Requirements
 
 TETHER consists of two parts:
