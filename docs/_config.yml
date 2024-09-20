@@ -9,6 +9,7 @@ theme: jekyll-theme-minimal
 markdown: kramdown
 
 plugins:
+- jekyll-toc
 - jekyll-remote-theme
 
 url: https://pmavros.github.io/Tether
