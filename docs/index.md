@@ -1,4 +1,5 @@
 ## Getting started!
+{:toc}
 
 ### Why would I want to use Tether?
 Section in progress.
