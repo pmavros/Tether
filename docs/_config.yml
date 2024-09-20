@@ -24,6 +24,22 @@ kramdown:
   smart_quotes: lsquo,rsquo,ldquo,rdquo
   enable_coderay: false
 
+defaults:
+  # _posts
+  - scope:
+      path: ""
+      # type: posts
+    values:
+      # layout: single
+      # author_profile: true
+      read_time: true
+      # comments: # true
+      # comments: true
+      # share: true
+      # related: true
+      # GS show date: https://mmistakes.github.io/minimal-mistakes/docs/configuration/#post-dates
+      show_date: true
+      toc: true
 
 plugins:
 # - jekyll-toc
