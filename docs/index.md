@@ -1,4 +1,5 @@
 ## Getting started!
+
 ### Why would I want to use Tether?
 ### How to install?
 1. If you don't have it installed already, download and install [Rhinoceros 3D](https://www.rhino3d.com/) (license or use up to 90 days on trial version).
