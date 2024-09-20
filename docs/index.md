@@ -1,3 +1,14 @@
+---
+  defaults:
+    # _docs
+    - scope:
+        path: ""
+        type: main
+      values:
+        sidebar:
+          nav: "main"
+---    
+  
 ## Getting started!
 {:toc}
 
