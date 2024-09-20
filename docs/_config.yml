@@ -5,6 +5,9 @@ remote_theme: pages-themes/minimal@v0.2.0
 # theme: jekyll-theme-minimal
 # theme: just-the-docs
 
+plugins:
+- jekyll-remote-theme
+
 url: https://pmavros.github.io/Tether
 
 aux_links: # remove if you don't want this link to appear on your pages
