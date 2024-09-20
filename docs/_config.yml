@@ -6,6 +6,8 @@ theme: just-the-docs
 # theme: jekyll-theme-minimal
 # theme: just-the-docs
 
+markdown: kramdown
+
 plugins:
 - jekyll-toc
 - jekyll-remote-theme
