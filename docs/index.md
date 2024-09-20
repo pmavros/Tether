@@ -1,11 +1,5 @@
----
-layout: default
-title: "Docs"
-toc: true
----
-
 ## Getting started!
-*TOC
+* TOC
 {:toc}
 
 
