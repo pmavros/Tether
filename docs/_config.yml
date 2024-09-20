@@ -1,15 +1,14 @@
 title: Tether Docs
 description: Documentation for using the Tether tool
 
-theme: just-the-docs
+# theme: just-the-docs
 # remote_theme: pages-themes/minimal@v0.2.0
-# theme: jekyll-theme-minimal
+theme: jekyll-theme-minimal
 # theme: just-the-docs
 
 markdown: kramdown
 
 plugins:
-- jekyll-toc
 - jekyll-remote-theme
 
 url: https://pmavros.github.io/Tether
