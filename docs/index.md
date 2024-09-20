@@ -1,16 +1,5 @@
----
-  defaults:
-    # _docs
-    - scope:
-        path: ""
-        type: main
-      values:
-        sidebar:
-          nav: "main"
----    
-  
 ## Getting started!
-{:toc}
+{{:toc}}
 
 ### Why would I want to use Tether?
 Section in progress.
