@@ -1,14 +1,3 @@
----
-  defaults:
-    # _docs
-    - scope:
-        path: ""
-        type: main
-      values:
-        sidebar:
-          nav: "main"
-  ---    
-
 title: Tether Docs
 description: Documentation for using the Tether tool
 
@@ -18,6 +7,7 @@ theme: just-the-docs
 # theme: just-the-docs
 
 plugins:
+- jekyll-toc
 - jekyll-remote-theme
 
 url: https://pmavros.github.io/Tether
