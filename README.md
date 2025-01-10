@@ -1,4 +1,4 @@
-![screenshots_drawing](https://github.com/user-attachments/assets/823daad0-70c3-410f-9e45-cb56a646c91a)# Tether
+# Tether
 
 ![](docs/assets/diagram.png)
 
@@ -15,7 +15,6 @@ Tether allows you to manually create trajectories or trace other behaviours in a
 The data are then saved as a Rhino file (.3dm) as points with xyz coordinate and additional attributes (ID, timestamp, behaviour type). Tether helps to then export this point data into a csv file for further processing, e.g. in QGIS or R.
 
 ![](docs/assets/csvexport_screenshot.png)
-
 
 ### How to install?
 1. If you don't have it installed already, download and install [Rhinoceros 3D](https://www.rhino3d.com/) **version 8** for Windows (license or use up to 90 days on trial version). At the moment the tool does not work on Rhino for Mac or earlier versions of Rhino. 
