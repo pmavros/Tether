@@ -8,7 +8,7 @@ TETHER enables the connection of a video playback in Processing and a CAD drawin
 ## Why would I want to use Tether?
 Tether allows you to manually create trajectories or trace other behaviours in a spatial format that includes timestamps obtained from a video source.
 
-![](docs/assets/screenshot_tutorial.png)
+![](docs/assets/screenshot_drawing.png)
 
 The data are then saved as a Rhino file (.3dm) as points with xyz coordinate and additional attributes (ID, timestamp, behaviour type). Tether helps to then export this point data into a csv file for further processing, e.g. in QGIS or R.
 
