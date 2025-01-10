@@ -33,16 +33,18 @@ The data are then saved as a Rhino file (.3dm) as points with xyz coordinate and
    
 4. To run the Tether Video.
 
-## Requirements
+## System Architecture
 
-TETHER consists of two parts:
+TETHER consists of two independent parts:
 
+### #1 A custom video player made with Processing http://processing.org
 
+![The Tether videoplayer](docs/assets/Tether_videoplayer.png)
 
-
-### #1 Processing http://processing.org
-
-A lightweigh script plays a movie, broadcasts the timestampt to the localhost using OSC and receives playback commands from the keyboard and also using OSC.
+A lightweigh processing script:
+1. plays a movie file using the VLCJVideo library (so it should play most files).
+2. **broadcasts the timestamp** to the localhost using the OSC protocol. 
+3. Receives playback commands from the keyboard and also from Rhino/Grasshopper (see next) again using OSC.
 
 The following external libraries are used. You can directly install both libraries from Processing (Tools > Add Tool > ...)
 
@@ -50,6 +52,8 @@ The following external libraries are used. You can directly install both librari
 1. Oleg Sidorov 's VLCJVideo library - https://github.com/icanhazbroccoli/VLCJVideo
 
 ### #2 Rhinoceros 3D modeling software https://www.rhino3d.com/
+
+![The Tether Annotation tool](docs/assets/Tether_rhino.png)
 
 A Grasshopper (GH) Script does four things:
 
