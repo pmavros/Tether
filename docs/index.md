@@ -49,9 +49,11 @@ You may need to install JAVA SE/SDK oracle.com/java/technologies/downloads/#jdk2
 ### Troubleshooting
 
 > I made a mistake, I need to add more points in a trajectory.
+> 
 No problem, playback the video where you want to add more points/behaviour and add them. Tether always listens to the timestamp of the frame displayed, so it does not matter in what order you added the annotations...
 
->I have Tether open in Grasshopper, but the timestamp is not updating. 
+>I have Tether open in Grasshopper, but the timestamp is not updating.
+>
 You might have multiple instances of the tether.gh file open, and only one can receive the timestamps. Close the other .gh or restart Rhino.
 
 ## System Architecture
