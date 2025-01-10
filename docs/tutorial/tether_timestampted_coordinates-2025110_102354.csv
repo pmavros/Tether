@@ -1,0 +1,12 @@
+layer,participant,x,y,z,timestamp,annotation_type
+tether,01,18.723194,43.515733,0,13.603,trajectory
+tether,01,19.499968,43.448769,0,13.102,trajectory
+tether,01,20.464239,43.10056,0,12.352,trajectory
+tether,01,20.624951,41.011307,0,10.616,trajectory
+tether,01,21.007717,38.851815,0,9.602,pause
+tether,01,20.908513,38.620337,0,9.101,trajectory
+tether,01,20.479734,37.803542,0,6.853,trajectory
+tether,01,20.5058,37.272234,0,5.852,pause
+tether,01,20.48861,36.995049,0,5.353,trajectory
+tether,01,20.451167,32.744502,0,1.855,trajectory
+tether,01,20.534239,29.985616,0,0.853,trajectory

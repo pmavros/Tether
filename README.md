@@ -1,4 +1,4 @@
-# Tether
+img# Tether
 
 ## Description
 TETHER enables the connection of a video playback in Processing and a CAD drawing in Rhinoceros. Behind the scenes, the Processing script relies on the OSC protocol to broadcast the playback position (i.e. the timestamp of the current frame, expressed as milliseconds from start, and as a percentage of the total movie duration). On the Rhinoceros side, a Grasshopper script, receive the timestamp information and allows the user to control the movie playback. When the user adds a new point on the current drawing on Rhino, the timestamp gets appended to the point as the object name as well as a separate attribute.  
@@ -14,6 +14,9 @@ TETHER enables the connection of a video playback in Processing and a CAD drawin
 ## Requirements
 
 TETHER consists of two parts:
+
+
+
 
 ### #1 Processing http://processing.org
 
