@@ -61,6 +61,12 @@ This open-architecture allows possible extensions, such as different programs to
 
 The development of Tether is based on the technical goals described above, namely to connect spatiotemporal and behavioural data for offline processing. Future work can look to integrate more types of spatial data and tools supported (e.g. QGIS), as well as other analytical modules for the processing of spatial annotations of behavioural and other data.
 
+# Availability
+
+The tool is available on GitHub and the documentation and tutorials are available to guide new users.
+
 # Acknowledgements
 
 The development of Tether begun at the Future Cities Laboratory (FCL) in Singapore and continues at Télécom Paris. 
+
+# References
