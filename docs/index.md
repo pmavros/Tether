@@ -27,7 +27,8 @@ TETHER consists of two independent parts that you need to get running (read belo
 6. Restart Rhino.
 
 #### To run the Tether Video
-1. Open the file _Tether_video.exe_ that you can find inside the download Tether folder / Tether_video/Windows/.
+1. Download and install VLC [https://www.videolan.org/vlc/](https://www.videolan.org/vlc/)
+2. Open the file _Tether_video.exe_ that you can find inside the download Tether folder / Tether_video/Windows/.
 
 You may need to install JAVA SE/SDK oracle.com/java/technologies/downloads/#jdk23-windows. Alternatively, download Processing [https://processing.org/download](https://processing.org/download) and run the file _Tether_video.pde_ instead. Either solution works the same.
 
