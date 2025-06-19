@@ -14,6 +14,9 @@ The data are then saved as a Rhino file (.3dm) as points with xyz coordinate and
 
 ![](docs/assets/csvexport_screenshot.png)
 
+## Why does it rely on Rhinoceros, rather than a QGIS or another FOSS solution?
+The aim was to create a tool that supports a wide range of cases and behavioural experiments. The tool was specifically motivated for our experiments inside real buildings, where people walk across multiple floors. Rhino works natively with various floorplans, and is made to support a user to enter or inspect their data in a 3D mode. QGIS can do 2.5D, but 3D is less flexible especially when you are creating the data. If you have other suggestions of how this could be implemented, don't hesitate to raise an issue or send an email.  
+
 ## How do I get started? 
 1. Download this repository
 2. Read the documentation and tutorial [here](https://pmavros.github.io/Tether/)
